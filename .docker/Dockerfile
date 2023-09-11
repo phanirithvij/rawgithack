@@ -7,8 +7,6 @@ RUN rm /etc/nginx/conf.d/default.conf &&\
     sed $'/PLACEHOLDER/{r index.html\nd}' base.html > www/index.html &&\
     sed $'/PLACEHOLDER/{r faq.html\nd}' base.html > www/faq.html &&\
     sed $'/PLACEHOLDER/{r purge-cache.html\nd}' base.html > www/purge-cache.html &&\
-    rm *.html &&\
-    mkdir -p /var/cache/nginx/rawgithack_patrons && chown nobody:nobody /var/cache/nginx/rawgithack_patrons
+    rm *.html
 VOLUME /var/cache/nginx/rawgithack
-VOLUME /var/cache/nginx/rawgithack_patrons
 CMD ["nginx", "-g", "daemon off;"]

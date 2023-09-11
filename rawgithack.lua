@@ -2,59 +2,6 @@ local json = require("cjson")
 local http = require("resty.http")
 local cfg = require("config")
 
-local patrons = {}
-
-
-local function dump_file(path, data)
-   local file, err = io.open(path, "w")
-   if err then return ngx.log(ngx.WARN, "File dumping error: " .. err) end
-   file:write(data)
-   file:close()
-end
-
-
-local function load_file(path)
-   local file, err = io.open(path, "r")
-   if err then return ngx.log(ngx.WARN, "File reading error: " .. err) end
-   local data = file:read("*all")
-   file:close()
-   return data
-end
-
-
-local function refresh_patrons(_premature, cold_cache_path)
-   local headers = {['Authorization'] = 'Bearer ' .. cfg.patreon.token}
-   local next_page = table.concat({
-     'https://www.patreon.com/api/oauth2/v2/campaigns',
-     cfg.patreon.campaign,
-     'members?fields%5Bmember%5D=email,patron_status'}, '/')
-   local acc = {}
-   while next_page ~= json.null do
-     local res, err = http.new():request_uri(next_page, {headers=headers})
-     if res and res.status ~= 200 then err = res.body end
-     if err then return ngx.log(ngx.WARN, "Cannot refresh patrons list: " .. err) end
-     local result = json.decode(res.body)
-     for i = 1, #result['data'] do
-         local user = result['data'][i]['attributes']
-         if user['patron_status'] == 'active_patron' then
-            acc[user['email']:lower()] = true
-         end
-     end
-     next_page = result['meta']['pagination']['cursors']['next']
-   end 
-   patrons = acc
-   dump_file(cold_cache_path, json.encode(acc))
-end
-
-
-local function init()
-   local cold_cache_path = "/var/cache/nginx/rawgithack_patrons/patrons.json"
-   ngx.timer.every(60, refresh_patrons, cold_cache_path)
-   local cold_cache = load_file(cold_cache_path)
-   if cold_cache ~= nil then patrons = json.decode(cold_cache) end
-end
-
-
 local function error(desc)
    ngx.status = ngx.HTTP_BAD_REQUEST
    ngx.say(json.encode({success = false, response = desc}))
@@ -68,7 +15,7 @@ local function validate_files(raw_files)
    local files, invalid_files = {}, {}
    for l in raw_files:gmatch('[^\r\n]+') do
       local url = l:gsub('^%s*(.*)%s*$', '%1') -- trailing whitespaces
-      local valid = url:match('^https?://%w+cdn%.githack%.com')
+      local valid = url:match('^https?://%w+cdn%.armyofrats%.in')
       table.insert(valid and files or invalid_files, url)
    end
 
@@ -101,12 +48,12 @@ end
 
 local function url_to_cache_key(url)
    local map = {
-      ['^https?://glcdn%.githack%.com'] = 'gitlab.com',
-      ['^https?://bbcdn%.githack%.com'] = 'bitbucket.org',
-      ['^https?://rawcdn%.githack%.com'] = 'raw.githubusercontent.com',
-      ['^https?://gistcdn%.githack%.com'] = 'gist.githubusercontent.com',
-      ['^https?://srhtcdn%.githack%.com'] = 'git.sr.ht',
-      ['^https?://srhgtcdn%.githack%.com'] = 'hg.sr.ht'
+      ['^https?://glcdn%.armyofrats%.in'] = 'gitlab.com',
+      ['^https?://bbcdn%.armyofrats%.in'] = 'bitbucket.org',
+      ['^https?://rawcdn%.armyofrats%.in'] = 'raw.githubusercontent.com',
+      ['^https?://gistcdn%.armyofrats%.in'] = 'gist.githubusercontent.com',
+      ['^https?://srhtcdn%.armyofrats%.in'] = 'git.sr.ht',
+      ['^https?://srhgtcdn%.armyofrats%.in'] = 'hg.sr.ht'
    }
    for pattern, origin in pairs(map) do
       local cache_key, n = url:gsub(pattern, origin, 1)
@@ -136,9 +83,6 @@ local function purge_request()
    local args, err = ngx.req.get_post_args()
    if err == "truncated" then error("truncated request") end
 
-   if (not patrons[args.patron:lower()] and
-       args.patron ~= cfg.simsim) then error("you are not our patron") end
-
    local files = validate_files(args.files)
    ngx.log(ngx.WARN, "got a request to purge #" .. #files .. " files")
    local_purge(files) 
@@ -148,6 +92,5 @@ end
 
 
 return {
-   init = init,
    purge_request = purge_request
 }
