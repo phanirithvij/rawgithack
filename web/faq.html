@@ -19,7 +19,7 @@
       They do this because serving raw files from a git repo is relatively inefficient, so they want to discourage people from using their repos for static file hosting.
     </p>
     <p>
-      raw.githack.com acts as a caching proxy, forwarding requests to the corresponding service, caching the responses either for a short time (in the case of development URLs) or permanently (in the case of CDN URLs), and relaying them to your browser with the correct <code>Content-Type</code> headers.
+      raw.armyofrats.in acts as a caching proxy, forwarding requests to the corresponding service, caching the responses either for a short time (in the case of development URLs) or permanently (in the case of CDN URLs), and relaying them to your browser with the correct <code>Content-Type</code> headers.
     </p>
     <p>
       The caching layer ensures that minimal load is placed on each service, and you get quick and easy static file hosting right from a repo. Everyone's happy!
@@ -40,9 +40,9 @@
   </div>
 
   <div id="associated-with-hosting-service" class="question">
-    <h2><a href="#associated-with-hosting-service">Is raw.githack.com associated with any of the supported hosting services?</a></h2>
+    <h2><a href="#associated-with-hosting-service">Is raw.armyofrats.in associated with any of the supported hosting services?</a></h2>
     <p>
-      No, raw.githack.com is not associated with them in any way. Please don't contact their support asking for help with raw.githack.com. They'll give you a weird look and back away slowly.
+      No, raw.armyofrats.in is not associated with them in any way. Please don't contact their support asking for help with raw.armyofrats.in. They'll give you a weird look and back away slowly.
     </p>
   </div>
 
@@ -52,7 +52,7 @@
       When you make a request to a development URL, the server loads the requested file from the corresponding service, serves it to your browser with the correct <code>Content-Type</code> header, and caches it for a short time. If you push new changes to your repo, you can reload and see them within a few minutes, which makes development URLs useful for low-traffic testing or sharing demos during development.
     </p>
     <p>
-      Requests to CDN are routed through <a href="http://cloudflare.com/">CloudFlare</a>'s content delivery network, and are cached <strong>for a year</strong> the first time they're loaded. This results in the best performance and reduces load on raw.githack.com and on underlying service, but it means that reloading won't fetch new changes. Furthermore, JS, CSS and HTML files can be minified for the sake of performance, if you add <code>?min=1</code> query parameter.
+      Requests to CDN are routed through <a href="http://cloudflare.com/">CloudFlare</a>'s content delivery network, and are cached <strong>for a year</strong> the first time they're loaded. This results in the best performance and reduces load on raw.armyofrats.in and on underlying service, but it means that reloading won't fetch new changes. Furthermore, JS, CSS and HTML files can be minified for the sake of performance, if you add <code>?min=1</code> query parameter.
     </p>
     <p>
       During development, when traffic is low and freshness is more important than performance, use development URLs. For anything you share with the public or push to production, use CDN URLs.
@@ -93,12 +93,12 @@
   </div>
 
   <div id="no-uptime-guarantee" class="question">
-    <h2><a href="#no-uptime-guarantee">I need guaranteed 100% uptime. Should I use raw.githack.com?</a></h2>
+    <h2><a href="#no-uptime-guarantee">I need guaranteed 100% uptime. Should I use raw.armyofrats.in?</a></h2>
     <p>
       Probably not.
     </p>
     <p>
-      raw.githack.com is a free service and cannot provide any uptime or support guarantees, even for CDN URLs. While I do my best to keep things running, things sometimes go wrong. Sometimes there are network or provider issues outside my control, sometimes abusive traffic temporarily affects response times, and sometimes I break things (although I try really hard not to).
+      raw.armyofrats.in is a free service and cannot provide any uptime or support guarantees, even for CDN URLs. While I do my best to keep things running, things sometimes go wrong. Sometimes there are network or provider issues outside my control, sometimes abusive traffic temporarily affects response times, and sometimes I break things (although I try really hard not to).
     </p>
     <p>
       You can take a look at our <a href="https://stats.uptimerobot.com/XAMJYh438n">uptime stats</a> to decide if this service is stable enough for you.
@@ -125,7 +125,7 @@
   <div id="feedback" class="question">
     <h2><a href="#feedback">I have feedback or want to report a bug! Who can I contact?</a></h2>
     <p>
-      To report a critical issue like raw.githack.com being broken, used to spread spam/copyright-protected content/etc or to share general feedback, <a href="mailto:i@neoascetic.me">send me a letter</a>. I try to respond quickly when I'm awake and near a computer, but sometimes I do have to sleep. To report a non-critical bug, please <a href="https://github.com/neoascetic/rawgithack/issues">file an issue</a>.
+      To report a critical issue like raw.armyofrats.in being broken, used to spread spam/copyright-protected content/etc or to share general feedback, <a href="mailto:i@neoascetic.me">send me a letter</a>. I try to respond quickly when I'm awake and near a computer, but sometimes I do have to sleep. To report a non-critical bug, please <a href="https://github.com/phanirithvij/rawgithack/issues">file an issue</a>.
     </p>
   </div>
 
